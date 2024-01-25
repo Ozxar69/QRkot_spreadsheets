@@ -4,13 +4,13 @@ SECRET=SECRET
 
 TYPE=service_account
 PROJECT_ID=enhanced-optics-412011
-PRIVATE_KEY_ID=9634f26adcfb2c8aa2d017a5ede86213509f34cd
-PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCppwQl6794N1g2\n+G7PO9bPs8xo0P8/QAxtHs8lgvfKHseh4agiBylo/xo4/L5rWyVdQuakaMXyvZRG\nRL6YrGTPGbzR0GKzRjP3Gn88kwzlu4H50CIpzmf7gkRwH+SR43KW967RV+qjLEtu\nXBIMI7vp1ThCqgqeaFbbqLa1xxM3cQ6JuIiGm2IBbGOXP9B4AJzjpsJtBlHulnW7\ncE0nZuLZOWAxErfEjuz5CHtDnOj/pP+w7r9VOihl1DayNSUku+FzHt3nwwmFq/DN\n4mndaZ9c1flM1Ja3vqwV2AI0fbbj/qoFZ5s+mWo53C7zibazDuOfb2MSC4lRW5+x\nNXJy/B9lAgMBAAECggEAASpEjkZynm6nibBw7GCWvqmXXV9AEte2WM0rHYYV0brJ\nOAdOymBeYa+iJw2J+OlGQKrMCYmEVdYvournxzB55xfgEth5m7hp9MgRuHaxvOXU\nhETFvfVCWWPBOLw+AN19GjnRvB4nM58t1nBwmZ+TiQ0okYFNnjMNE6hH4Z2KzX4+\nUvIoseXI9yXqIhrqn28PsByq7uwQqGv7qfzUo8Fnih2KiPI4OTj/n6chcO+Y/C9/\nvGDXd43DxGC4+CcO4LmkkbMoV9+DKnOz76beHi40xfhEpwPzAo9SnYvIJHNilXZg\nEra8srVBdlqOsP70eqsQ2TAqdkI20VBaKjo1XkgE+QKBgQDe5jHE+Vu184x2/7C5\nizGgFN8KN084CrQ4Ywc7FZSl4ePcVUSuod/UQ3FJU0pmkzQ6LN9n7b0vQz9b7kRV\nwKqeQjndURCGfKSCaiUBp+12RcmpWM5/AfQb004iDp22pHi+Ui6hI6oZxvKIRpQf\nBoUGX5YnxINuHfayBvZBg9+pDQKBgQDC2JM+kQEvDf2Hz7KyzzjOivzHwLyBpzpm\nUH93ExNu3ZkdY9YXe5KB/YoPQKQUfME0TxJSG5DjQCoCmpfrnx1GybiQtd94lJkO\nWQtp+5G0rHjtiNhWpntbAtiLgQHGyv4+4aOURtosIG2JKdGhjr8hgE12Z4xUKHGA\nRWg7Oa+JuQKBgGMYU+gONAegT0JYSmkyyM0yejZAgKeZmqW24PATmBJnarX58p7w\nuGHV2fePX/RaXU2/xVKfDwyECRcFxruY/EF/j9okwAQKRdj0957U2W1LeWwgXy13\n4N6+Am6BsPwSAtwaDUD2ahkrqYeMWS2x6FH9DPSBGS1LhPGAxto5lqXBAoGARGwV\nWPVGuyVokJapJA2M30sDdYoDKGx3H5LJECGMw3Ph3uY+OkTUr/0+zBhhBijBGANk\nZZz0hjj0B7IOA1n+x+ryey7C6O8VyGoQjgkfo5ilZpSVk+gmjVE0hdiprQt/uMk3\nzkwLNU+152LeEKO2DqeljBzUtID3SpoU/idFs1ECgYEA2EZ3dNzdi+4vwXmS5jov\n/xAecBVX4AcVkfycIJ2zJnfTiMwHNQXmKl8pV53alZ3nhW38JXMRyCIveaBVOQlo\nTgg4YYoPqLxkhcrPz4ySjjkxnAWE4xV9M9JWL9WI9VFviF1Foobkkn5YKJKJXayG\nQfyJi5297NBHS20BqAt9RlM=\n-----END PRIVATE KEY-----\n"
+PRIVATE_KEY_ID=YourKey
+PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\YourKey\n-----END PRIVATE KEY-----\n"
 CLIENT_EMAIL=firstakk@enhanced-optics-412011.iam.gserviceaccount.com
-CLIENT_ID=117516341054829951296
+CLIENT_ID=YourKey
 AUTH_URI=https://accounts.google.com/o/oauth2/auth
 TOKEN_URI=https://oauth2.googleapis.com/token
 AUTH_PROVIDER_X509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
 CLIENT_X509_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/firstakk%40enhanced-optics-412011.iam.gserviceaccount.com
 
-EMAIL=ozxar.bishop@gmail.com
+EMAIL=YourKeyp@gmail.com
