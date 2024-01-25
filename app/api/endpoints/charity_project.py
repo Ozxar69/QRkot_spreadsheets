@@ -32,7 +32,7 @@ async def create_new_project(
     charity_project: CharityProjectCreate,
     session: AsyncSession = Depends(get_async_session),
 ):
-    """Создать новый проект (Только для суперюзеров)."""
+    """Создает новый проект (Только для суперюзеров)."""
     await check_name_duplicate(charity_project.name, session)
     new_project = await charity_project_crud.create(charity_project, session)
     donations = await donation_crud.free_objects(session)
@@ -54,7 +54,7 @@ async def partially_update_project(
     obj_in: CharityProjectUpdate,
     session: AsyncSession = Depends(get_async_session),
 ):
-    """Редактировать существующий проект (Только для суперюзеров)."""
+    """Редактирует существующий проект (Только для суперюзеров)."""
     charity_project = await check_charity_project_exists(
         charity_project_id,
         session,
@@ -86,7 +86,7 @@ async def remove_charity_project(
     charity_project_id: int,
     session: AsyncSession = Depends(get_async_session),
 ):
-    """Удалить проект (Только для суперюзеров)."""
+    """Удаляет проект (Только для суперюзеров)."""
     charity_project = await check_charity_project_exists(
         charity_project_id,
         session,
@@ -107,5 +107,5 @@ async def remove_charity_project(
 async def get_all_charity_projects(
     session: AsyncSession = Depends(get_async_session),
 ) -> list[CharityProjectDB]:
-    """Получить список всех проектов."""
+    """Получает список всех проектов."""
     return await charity_project_crud.get_multi(session)

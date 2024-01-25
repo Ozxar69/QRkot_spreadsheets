@@ -1,111 +1,134 @@
 from datetime import datetime
 
 from aiogoogle import Aiogoogle
+from sqlalchemy import func
 
 from app.core.config import settings
-from app.models import CharityProject
-
-FORMAT = "%Y/%m/%d %H:%M:%S"
-SPREADSHEET_ROWCOUNT_DRAFT = 100
-SPREADSHEET_COLUMNCOUNT_DRAFT = 11
-SPREADSHEET_BODY = dict(
-    properties=dict(
-        title='Отчет на ',
-        locale='ru_RU',
-    ),
-    sheets=[dict(properties=dict(
-        sheetType='GRID',
-        sheetId=0,
-        title='Лист1',
-        gridProperties=dict(
-            rowCount=SPREADSHEET_ROWCOUNT_DRAFT,
-            columnCount=SPREADSHEET_COLUMNCOUNT_DRAFT
-        )
-    ))]
+from constants import (
+    COLLECTION_TIME_LABEL,
+    COLUMN_COUNT,
+    DESCRIPTION_LABEL,
+    FORMAT,
+    GOOGLE_DRIVE_OBJ,
+    GOOGLE_DRIVE_VERSION,
+    GOOGLE_SHEETS_OBG,
+    GOOGLE_SHEETS_VERSION,
+    MAJOR_DIMENSION,
+    NAME_LABEL,
+    PERMISSION_FIELD,
+    PERMISSION_ROLE,
+    PERMISSION_TYPE,
+    PROP_LOCALE,
+    PROP_TITLE,
+    ROW_COUNT,
+    SHEET_ID,
+    SHEET_TITLE,
+    SHEET_TYPE,
+    SPREADSHEET_ID,
+    TABLE_VALUE_COL_1,
+    TABLE_VALUE_COL_2,
+    TABLE_VALUE_COL_3,
+    TABLE_VALUE_DESC,
+    VALUE_INPUT_OPTION,
+    VALUES_RANGE,
 )
-TABLE_VALUES_DRAFT = [
-    ['Отчет от', ],
-    ['Топ проектов по скорости закрытия'],
-    ['Название проекта', 'Время сбора', 'Описание']
-]
-ROW_COLUMN_COUNT_TOO_BIG = ('В ваших данных строк - {rows_value}, а'
-                            'столбцов - {columns_value}, но'
-                            'количество строк не'
-                            'должно превышать {rowcount_draft}, '
-                            'a столбцов - {columncount_draft}')
 
 
 async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
-    """Создаём документ."""
+    """Создает документ."""
     now_date_time = datetime.now().strftime(FORMAT)
-    service = await wrapper_services.discover('sheets', 'v4')
-    spreadsheets_body = SPREADSHEET_BODY.copy()
-    spreadsheets_body['properties']['title'] += now_date_time
-    response = await wrapper_services.as_service_account(
-        service.spreadsheets.create(json=SPREADSHEET_BODY)
+    service = await wrapper_services.discover(
+        GOOGLE_SHEETS_OBG,
+        GOOGLE_SHEETS_VERSION,
     )
-    spreadsheet_id = response['spreadsheetId']
-    return spreadsheet_id
+    spreadsheet_body = {
+        "properties": {
+            "title": PROP_TITLE + now_date_time,
+            "locale": PROP_LOCALE,
+        },
+        "sheets": [
+            {
+                "properties": {
+                    "sheetType": SHEET_TYPE,
+                    "sheetId": SHEET_ID,
+                    "title": SHEET_TITLE,
+                    "gridProperties": {
+                        "rowCount": ROW_COUNT,
+                        "columnCount": COLUMN_COUNT,
+                    },
+                }
+            }
+        ],
+    }
+    response = await wrapper_services.as_service_account(
+        service.spreadsheets.create(json=spreadsheet_body)
+    )
+    return response[SPREADSHEET_ID]
 
 
 async def set_user_permissions(
-        spreadsheetid: str,
-        wrapper_services: Aiogoogle
+    spreadsheet_id: str,
+    wrapper_services: Aiogoogle,
 ) -> None:
-    """Предоставляем права доступа."""
-    permissions_body = {'type': 'user',
-                        'role': 'writer',
-                        'emailAddress': settings.email}
-    service = await wrapper_services.discover('drive', 'v3')
+    """Предоставляет права доступа."""
+    permissions_body = {
+        "type": PERMISSION_TYPE,
+        "role": PERMISSION_ROLE,
+        "emailAddress": settings.email,
+    }
+    service = await wrapper_services.discover(
+        GOOGLE_DRIVE_OBJ,
+        GOOGLE_DRIVE_VERSION,
+    )
     await wrapper_services.as_service_account(
         service.permissions.create(
-            fileId=spreadsheetid,
+            fileId=spreadsheet_id,
             json=permissions_body,
-            fields="id"
-        ))
+            fields=PERMISSION_FIELD,
+        )
+    )
 
 
 async def spreadsheets_update_value(
-        spreadsheet_id: str,
-        charity_project: list[CharityProject],
-        wrapper_services: Aiogoogle
-) -> str:
-    """Наполняем документ данными."""
+    spreadsheet_id: str,
+    charity_projects: list[dict],
+    wrapper_services: Aiogoogle,
+) -> None:
+    """Обновляет данные в google-таблице."""
     now_date_time = datetime.now().strftime(FORMAT)
-    service = await wrapper_services.discover('sheets', 'v4')
+    service = await wrapper_services.discover(
+        GOOGLE_SHEETS_OBG,
+        GOOGLE_SHEETS_VERSION,
+    )
 
-    table_values = TABLE_VALUES_DRAFT.copy()
-    table_values[0].append(now_date_time)
-    table_values = [*table_values,
-                    *[list(map(str,
-                               [project.name,
-                                project.close_date - project.create_date,
-                                project.description])) for project in
-                      charity_project]
-                    ]
-    update_body = {
-        'majorDimension': 'ROWS',
-        'values': table_values
-    }
+    table_values = [
+        [PROP_TITLE, now_date_time],
+        [TABLE_VALUE_DESC],
+        [TABLE_VALUE_COL_1, TABLE_VALUE_COL_2, TABLE_VALUE_COL_3],
+    ]
 
-    columns_value = max(len(items_to_count)
-                        for items_to_count in table_values)
-    rows_value = len(table_values)
-    if (SPREADSHEET_ROWCOUNT_DRAFT < rows_value or
-            SPREADSHEET_COLUMNCOUNT_DRAFT < columns_value):
-        raise ValueError(ROW_COLUMN_COUNT_TOO_BIG.format(
-            rows_value=rows_value,
-            columns_value=columns_value,
-            rowcount_draft=SPREADSHEET_ROWCOUNT_DRAFT,
-            columncount_draft=SPREADSHEET_COLUMNCOUNT_DRAFT))
+    for item in charity_projects:
+        new_row = [
+            item[NAME_LABEL],
+            item[COLLECTION_TIME_LABEL],
+            item[DESCRIPTION_LABEL],
+        ]
+        table_values.append(new_row)
 
+    update_body = {"majorDimension": MAJOR_DIMENSION, "values": table_values}
     await wrapper_services.as_service_account(
         service.spreadsheets.values.update(
             spreadsheetId=spreadsheet_id,
-            range=f'R1C1:R{rows_value}C{columns_value}',
-            valueInputOption='USER_ENTERED',
-            json=update_body
+            range=VALUES_RANGE.format(len(table_values)),
+            valueInputOption=VALUE_INPUT_OPTION,
+            json=update_body,
         )
     )
-    return spreadsheet_id
 
+
+async def calculate_collection_time(
+    create_date: datetime,
+    close_date: datetime,
+):
+    """Получает время, затраченное на сбор пожертвований."""
+    return func.julianday(close_date) - (func.julianday(create_date))

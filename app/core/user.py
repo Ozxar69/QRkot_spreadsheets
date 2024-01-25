@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
-    """Обеспечить доступ к БД через SQLAlchemy."""
+    """Обеспечивает доступ к БД через SQLAlchemy."""
     yield SQLAlchemyUserDatabase(session, User)
 
 
@@ -64,7 +64,9 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
                 reason="Password should be at least 3 characters"
             )
         if user.email in password:
-            raise InvalidPasswordException(reason="Password should not contain e-mail")
+            raise InvalidPasswordException(
+                reason="Password should not contain e-mail"
+            )
 
     async def on_after_register(
         self,
@@ -75,7 +77,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):
-    """Вернуть объект класса UserManager."""
+    """Возвращает объект класса UserManager."""
     yield UserManager(user_db)
 
 

@@ -8,22 +8,20 @@ from app.core.db import get_async_session
 from app.core.google_client import get_service
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
-from app.services.google_api import (set_user_permissions, spreadsheets_create,
-                                     spreadsheets_update_value)
+from app.services.google_api import (
+    set_user_permissions,
+    spreadsheets_create,
+    spreadsheets_update_value,
+)
+from constants import GOOGLE_SHEETS_URL, SUMMARY
 
 router = APIRouter()
 
-GOOGLE_SHEETS_URL = 'https://docs.google.com/spreadsheets/d/'
 
-
-@router.post(
-    '/',
-    dependencies=[Depends(current_superuser)],
-    summary='Отчет по закрытым проектам'
-)
+@router.post("/", dependencies=[Depends(current_superuser)], summary=SUMMARY)
 async def get_spreadsheet_report(
-        aiogoogle_object: Aiogoogle = Depends(get_service),
-        session: AsyncSession = Depends(get_async_session)
+    aiogoogle_object: Aiogoogle = Depends(get_service),
+    session: AsyncSession = Depends(get_async_session),
 ):
     """
     Только для суперпользователей.

@@ -7,7 +7,7 @@ from app.models import User
 
 
 class CRUDBase:
-    """Получить все объекты класса или создать новые."""
+    """Получает все объекты класса или создать новые."""
 
     def __init__(self, model):
         self.model = model
@@ -16,7 +16,7 @@ class CRUDBase:
         self,
         session: AsyncSession,
     ):
-        """Получить все объекты заданного класса."""
+        """Получает все объекты заданного класса."""
         db_objs = await session.execute(select(self.model))
         return db_objs.scalars().all()
 
@@ -26,7 +26,7 @@ class CRUDBase:
         session: AsyncSession,
         user: Optional[User] = None,
     ):
-        """Создать новый объект."""
+        """Создает новый объект."""
         obj_in_data = obj_in.dict()
 
         if user is not None:

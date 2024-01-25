@@ -1,16 +1,16 @@
-from pydantic import BaseSettings
 from typing import Optional
+
+from pydantic import BaseSettings
 
 from constants import APP_TITLE, DATABASE_URL, ENV_FILE_NAME, SECRET
 
 
 class Settings(BaseSettings):
-    """Считывать переменные окружения из файла."""
+    """Считывает переменные окружения из файла."""
 
     app_title: str = APP_TITLE
     database_url: str = DATABASE_URL
     secret: str = SECRET
-
 
     # google api
     type: Optional[str] = None
