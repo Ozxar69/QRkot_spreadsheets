@@ -3,10 +3,8 @@ from datetime import datetime
 from aiogoogle import Aiogoogle
 from sqlalchemy import func
 
-from app.core.config import settings
 from constants import (
     COLLECTION_TIME_LABEL,
-    COLUMN_COUNT,
     DESCRIPTION_LABEL,
     FORMAT,
     GOOGLE_DRIVE_OBJ,
@@ -15,15 +13,10 @@ from constants import (
     GOOGLE_SHEETS_VERSION,
     MAJOR_DIMENSION,
     NAME_LABEL,
+    PERMISSION_BODY,
     PERMISSION_FIELD,
-    PERMISSION_ROLE,
-    PERMISSION_TYPE,
-    PROP_LOCALE,
     PROP_TITLE,
-    ROW_COUNT,
-    SHEET_ID,
-    SHEET_TITLE,
-    SHEET_TYPE,
+    SPREADSHEET_BODY,
     SPREADSHEET_ID,
     TABLE_VALUE_COL_1,
     TABLE_VALUE_COL_2,
@@ -41,25 +34,8 @@ async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
         GOOGLE_SHEETS_OBG,
         GOOGLE_SHEETS_VERSION,
     )
-    spreadsheet_body = {
-        "properties": {
-            "title": PROP_TITLE + now_date_time,
-            "locale": PROP_LOCALE,
-        },
-        "sheets": [
-            {
-                "properties": {
-                    "sheetType": SHEET_TYPE,
-                    "sheetId": SHEET_ID,
-                    "title": SHEET_TITLE,
-                    "gridProperties": {
-                        "rowCount": ROW_COUNT,
-                        "columnCount": COLUMN_COUNT,
-                    },
-                }
-            }
-        ],
-    }
+    spreadsheet_body = SPREADSHEET_BODY.copy()
+    spreadsheet_body["properties"]["title"] += now_date_time
     response = await wrapper_services.as_service_account(
         service.spreadsheets.create(json=spreadsheet_body)
     )
@@ -71,11 +47,7 @@ async def set_user_permissions(
     wrapper_services: Aiogoogle,
 ) -> None:
     """Предоставляет права доступа."""
-    permissions_body = {
-        "type": PERMISSION_TYPE,
-        "role": PERMISSION_ROLE,
-        "emailAddress": settings.email,
-    }
+    permissions_body = PERMISSION_BODY
     service = await wrapper_services.discover(
         GOOGLE_DRIVE_OBJ,
         GOOGLE_DRIVE_VERSION,

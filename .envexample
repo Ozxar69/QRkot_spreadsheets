@@ -13,4 +13,4 @@ TOKEN_URI=https://oauth2.googleapis.com/token
 AUTH_PROVIDER_X509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
 CLIENT_X509_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/firstakk%40enhanced-optics-412011.iam.gserviceaccount.com
 
-EMAIL=YourKeyp@gmail.com
+EMAIL=YourKey@gmail.com

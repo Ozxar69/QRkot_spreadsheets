@@ -1,4 +1,10 @@
+import os
 from datetime import datetime
+
+from dotenv import load_dotenv
+
+load_dotenv()  # не могу использовать from app.core.config import settings
+# из за ошибки циклических импортов
 
 # services/google_api
 #   spreadsheets_create
@@ -6,19 +12,38 @@ FORMAT = "%Y/%m/%d %H:%M:%S"
 GOOGLE_SHEETS_OBG = "sheets"
 GOOGLE_SHEETS_VERSION = "v4"
 PROP_TITLE = "Отчёт от "
-PROP_LOCALE = "ru_RU"
-SHEET_TYPE = "GRID"
-SHEET_ID = 0
-SHEET_TITLE = "Лист1"
-ROW_COUNT = 100
-COLUMN_COUNT = 11
 SPREADSHEET_ID = "spreadsheetId"
+SPREADSHEET_BODY = {
+    "properties": {
+        "title": "Отчёт от ",
+        "locale": "ru_RU",
+    },
+    "sheets": [
+        {
+            "properties": {
+                "sheetType": "GRID",
+                "sheetId": 0,
+                "title": "Лист1",
+                "gridProperties": {
+                    "rowCount": 100,
+                    "columnCount": 11,
+                },
+            }
+        }
+    ],
+}
+
 #   set_user_permissions
-PERMISSION_TYPE = "user"
-PERMISSION_ROLE = "writer"
 GOOGLE_DRIVE_OBJ = "drive"
 GOOGLE_DRIVE_VERSION = "v3"
 PERMISSION_FIELD = "id"
+
+PERMISSION_BODY = {
+    "type": "user",
+    "role": "writer",
+    "emailAddress": os.getenv("EMAIL"),
+}
+
 #   spreadsheets_update_value
 TABLE_VALUE_DESC = "Топ проектов по скорости закрытия"
 TABLE_VALUE_COL_1 = "Название проекта"
@@ -48,6 +73,7 @@ INVESTED_AMOUNT_DEFAULT = 0
 FULLY_INVESTED_DEFAULT = False
 CREATE_DATE_DEFAULT = datetime.utcnow
 CLOSE_DATE_DEFAULT = None
+
 # models/donation
 USER_ID_FK_MD = "user.id"
 USER_ID_FK_NAME = "fk_donation_user_id_user"
@@ -64,6 +90,7 @@ BEARER_TRANSPORT = "auth/jwt/login"
 LIFETIME_SECONDS = 3600
 AUTH_BACKEND_NAME = "jwt"
 PASSWORD_MIN_LEN = 3
+
 # core/config
 APP_TITLE = "Поддержка котиков QRKot"
 DATABASE_URL = "sqlite+aiosqlite:///./fastapi.db"
